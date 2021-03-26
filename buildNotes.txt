@@ -1,0 +1,26 @@
+The original idea for this comes from work, where we are trying to set up a local container env which runs kafka -> nifi -> hive
+
+
+This is the recipie I found: https://github.com/sciencepal/dockers/tree/master/hadoop_hive_spark_docker
+
+++++++
+
+2021.03.25:1948
+ - everything is launhed (in theory)
+ - able to visit nifi <http://localhost:8080/nifi>
+ - able to exec into nifi-container (nifi.sh status)
+ - able to exec into edge-node (hdfs dfs -ls /)
+
+Remaining goals...
+	x - publish kafka msg <terminal> (...I think it is on the edge node)
+	x - consume kafka msg <terminal>
+	x - consume kafka msg <nifi>
+	<skip> - publihs kafka msg <nifi>
+	x - get file info <nifi>
+		+ needed to add hdfs-site & core-site to nifi-container, and it just worked!?!
+	x - putHdfs / getHdfs <nifi>
+
+
+
+
+

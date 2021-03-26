@@ -1,0 +1,21 @@
+So...  I guess I don't have docker installed.
+
+
+Following this guide: https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04
+
+**It is now set up so that my user is part of the docker group (so don't need to sudo everything)
+
+
+
+"SSH" into running container
+	$ docker exec -it <container name> /bin/bash
+
+Add docker group to user (run 1x)
+NOTE: this is how you can not sudo before all docker commands
+	$ sudo usermod -aG docker ${USER}
+
+Activate new group membership (run 1x per session?)
+	$ su - ${USER}
+
+Check what groups current user is part of
+	$ id -nG

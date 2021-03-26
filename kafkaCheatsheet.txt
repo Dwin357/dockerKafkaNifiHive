@@ -1,0 +1,30 @@
+resource: https://github.com/bitnami/bitnami-docker-kafka
+http://cloudurable.com/blog/kafka-tutorial-kafka-from-command-line/index.html
+
+
+Docker Notes
+	-kafka & zookeeper run on the edge node
+	-when exec into edge note either "localhost" or "edge" can be used for host
+	-for other containers on the container-network use "edge" for host
+
+
+List Topic
+	bin/kafka-topics.sh --list --zookeeper edge:2181
+
+
+Create Topic
+	bin/kafka-topics.sh --create \
+  --zookeeper localhost:2181 \
+  --replication-factor 1 --partitions 13 \
+  --topic litter-bug
+
+Console Producer
+	bin/kafka-console-producer.sh \
+    --broker-list localhost:9092 \
+    --topic litter-bug
+
+Console Consumer
+	bin/kafka-console-consumer.sh \
+    --bootstrap-server localhost:9092 \
+    --topic litter-bug \
+    --from-beginning

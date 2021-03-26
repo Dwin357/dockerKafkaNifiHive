@@ -1,0 +1,18 @@
+Activate docker group membership (run 1x per session?)
+	$ su - ${USER}
+
+Push/Pull files to container
+	push
+	$ docker cp foo.txt mycontainer:/foo.txt
+	pull
+	$ docker cp mycontainer:/foo.txt foo.txt
+
+Delete all stopped container / unused resources
+	$ docker system prune
+
+Delete images
+	$ docker rmi <img-1> <img-2>
+
+"SSH" into running container
+	$ docker exec -it <container name> /bin/bash
+
