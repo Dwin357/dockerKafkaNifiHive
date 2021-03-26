@@ -7,13 +7,6 @@ EXPOSE 22
 
 RUN apt-get update
 
-# Uncomment these lines to install Oracle JDK instead of OpenJDK
-# RUN apt-get install -y software-properties-common
-# RUN add-apt-repository -y ppa:webupd8team/java
-# RUN apt-get update
-# RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
-# RUN apt-get install -y oracle-java8-installer
-
 # OpenJDK installation
 RUN apt-get install -y openjdk-8-jre openjdk-8-jdk openssh-server vim
 
@@ -47,5 +40,10 @@ RUN echo "export TOOLS_JAR=${JAVA_HOME}/lib/tools.jar" >> /home/hadoop/nifi/bin/
 
 ADD configs/nifi.properties /home/hadoop/nifi/conf/nifi.properties
 RUN chown hadoop -R /home/hadoop/nifi
+
+RUN mkdir /home/hadoop/hdfs
+ADD configs/core-site.xml /home/hadoop/hdfs/core-site.xml
+ADD configs/hdfs-site.xml /home/hadoop/hdfs/hdfs-site.xml
+RUN chown hadoop -R /home/hadoop/hdfs
 
 CMD service ssh start && bash
