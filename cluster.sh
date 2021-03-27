@@ -32,7 +32,7 @@ function startServices {
   docker exec -u hadoop -d nodemaster hive --service hiveserver2
   echo ">> Starting Nifi Server ..."
   docker exec -u hadoop -d nifi /home/hadoop/nifi/bin/nifi.sh start
-   echo ">> Starting kafka & Zookeeper ..."
+  echo ">> Starting kafka & Zookeeper ..."
   docker exec -u hadoop -d edge /home/hadoop/kafka/bin/zookeeper-server-start.sh -daemon  /home/hadoop/kafka/config/zookeeper.properties
   docker exec -u hadoop -d edge /home/hadoop/kafka/bin/kafka-server-start.sh -daemon  /home/hadoop/kafka/config/server.properties
   echo "Hadoop info @ nodemaster: http://172.20.1.1:8088/cluster"

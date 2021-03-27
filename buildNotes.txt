@@ -19,8 +19,92 @@ Remaining goals...
 	x - get file info <nifi>
 		+ needed to add hdfs-site & core-site to nifi-container, and it just worked!?!
 	x - putHdfs / getHdfs <nifi>
+		+ just works, given files above
+
++++++++
+
+2021.03.06:1755
+	We are able to...
+	- publish to container-kafka using terminal producer
+	- read from kafka in nifi
+	- put file from nifi to hdfs
+	- exec into edge node and hdfs dfs -ls to see the file
+
+Remaining goals
+	- (maybe?) connect to beeline ...from the edge node?
+	- connect to hive from nifi-hdfs-processor 
+
+2021.03.26:1950
+	Resources:
+		https://stackoverflow.com/questions/29113323/connecting-to-hive-using-beeline
+
+	Question: to make beeline connection, I need to pass the connection url (but what should that be?)
+
+	This example looks like what we use at work
+
+	beeline -u jdbc:hive2://silver-server-hive.app.google.com:10000 -n <yourname> -p <yourpassword> --incremental=true**
+
+	Based on reading, I believe the server is supposed to be the "hive2server"...
+	...now just need to figure out which one that is
 
 
+	Observation:
+		This line is from the start script: docker exec -u hadoop -d nodemaster hive --service hiveserver2
+		-u is user; so hadoop user
+		-d is detached head
+		clearly hiveserver2 is also in the mix here too
+
+		Looking at this line from the start script
+		docker exec -u hadoop -d edge /home/hadoop/kafka/bin/zookeeper-server-start.sh -daemon  /home/hadoop/kafka/config/zookeeper.properties
+
+		-d <node> <command> <..? arguments to command>
+
+		So then, going back to the original; nodemaster is the container, hive is the command, hiverserver2 is an arg?
+
+		So to put it all together, I should be able to connect to hive w/ 
+		beeline -u jdbc:hive2://nodemaster:10000 -n <yourname> -p <yourpassword>
+
+		THIS WORKED, at least to log in and show tables (run on edge node)
+			$ beeline -u jdbc:hive2://nodemaster:10000
+		
 
 
+	2021.03.26:2104
+		after some back and forth, was able create a table (using beeline) w/ the following
 
+		CREATE EXTERNAL TABLE people_table ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe' WITH SERDEPROPERTIES ('avro.schema.literal'='{"name":"person","type":"record","fields": [{"name":"full_name", "type":"string"},{"name":"age", "type":"int", "default":999}]}') STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat' LOCATION '/user/dwin/people';
+
+		Then put an element into hdfs (using nifi)
+		{
+			"full_name":"rolling rock",
+			"age":33
+		}
+
+		When tried to query using beeline, got this error
+		Error: java.io.IOException: org.apache.avro.AvroTypeException: Found long, expecting int
+
+		Going to try and drop the table, and re-run w/ all strings --see if that works
+		Yep - It works!?!
+
+
+	2021.03.26:2138
+		tried to setup an execute-sql processor in nifi to replicate the select that worked w/ beeline
+
+		tried sql query - both ending w/ ";" and w/out, in either case I got the same error
+			executesql.error.message
+			Method not supported
+
+		thinking - tried using a "HiveConnectionPool", maybe instead a "DBCPConnectionPool"
+
+		to make this work - I need to have a "Database Driver Class Name"
+		...
+		maybe(?):org.apache.hive.jdbc.HiveDriver
+
+
+Success!!!
+	- had to change it up slightly...  ended up using a SelectHiveQl+HiveConnectionPool
+			no driver was needed, just the connection URL
+	- also, breaks if you use ";"
+	- but if you do both of those --boom, totally works
+
+Next challenge - how to make it auto load a template

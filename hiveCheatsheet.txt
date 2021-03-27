@@ -1,0 +1,62 @@
+
+Schema file
+	CREATE EXTERNAL TABLE 
+		avro_hive_table
+	ROW FORMAT SERDE 
+		'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+	TBLPROPERTIES
+		('avro.schema.url'='hdfs://localdomain/user/avro/schemas/activity.avsc')
+	STORED AS 
+	INPUTFORMAT
+		'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+	OUTPUTFORMAT
+		'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+	LOCATION
+		'/user/avro/applog_avro';
+
+
+Schema Literal
+	CREATE EXTERNAL TABLE 
+		people_table
+	ROW FORMAT SERDE 
+		'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+	TBLPROPERTIES
+		('avro.schema.literal'='
+			{
+				"name":"person",
+				"type":"record",
+				"fields": [
+					{"name":"full_name", "type":"string"},
+					{"name":"age", "type":"int", "default":999}
+				]
+			}
+		')
+	STORED AS 
+	INPUTFORMAT
+		'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+	OUTPUTFORMAT
+		'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+	LOCATION
+		'/user/dwin/people';
+
+
+CREATE EXTERNAL TABLE people_table ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe' TBLPROPERTIES ('avro.schema.literal'='{"name":"person","type":"record","fields": [{"name":"full_name", "type":"string"},{"name":"age", "type":"int"}]}') STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat' LOCATION '/user/dwin/people';
+
+
+This worked...
+	Based on this resource: https://pastiaro.wordpress.com/2014/05/05/avro-backed-hive-table-in-cdh5-or-cdh4-5-encountered-avroserdeexception-determining-schema/
+
+CREATE EXTERNAL TABLE people_table ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe' WITH SERDEPROPERTIES ('avro.schema.literal'='{"name":"person","type":"record","fields": [{"name":"full_name", "type":"string"},{"name":"age", "type":"int", "default":999}]}') STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat' LOCATION '/user/dwin/people';
+
+
+{
+	"full_name":"rolling rock",
+	"age":33
+}
+
+CREATE EXTERNAL TABLE people_table ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe' WITH SERDEPROPERTIES ('avro.schema.literal'='{"name":"person","type":"record","fields": [{"name":"full_name", "type":"string"},{"name":"job", "type":"string"}]}') STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat' LOCATION '/user/dwin/people';
+
+{
+	"full_name":"rolling rock",
+	"job":"truck dirver"
+}
