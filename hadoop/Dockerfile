@@ -8,13 +8,6 @@ EXPOSE 22
 
 RUN apt-get update
 
-# Uncomment these lines to install Oracle JDK instead of OpenJDK
-# RUN apt-get install -y software-properties-common
-# RUN add-apt-repository -y ppa:webupd8team/java
-# RUN apt-get update
-# RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
-# RUN apt-get install -y oracle-java8-installer
-
 # OpenJDK installation
 RUN apt-get install -y openjdk-8-jre openjdk-8-jdk openssh-server vim
 
@@ -36,7 +29,8 @@ RUN cat /home/hadoop/.ssh/id_rsa.pub >> /home/hadoop/.ssh/authorized_keys
 RUN chown hadoop -R /home/hadoop/.ssh
 
 # get sources
-RUN wget https://archive.apache.org/dist/hadoop/core/hadoop-3.2.0/hadoop-3.2.0.tar.gz -P /home/hadoop/
+#RUN wget https://archive.apache.org/dist/hadoop/core/hadoop-3.2.0/hadoop-3.2.0.tar.gz -P /home/hadoop/
+ADD resources/downloads/hadoop-3.2.0.tar.gz /home/hadoop/hadoop-3.2.0.tar.gz
 RUN tar -xzf /home/hadoop/hadoop-3.2.0.tar.gz -C /home/hadoop/
 RUN mv /home/hadoop/hadoop-3.2.0 /home/hadoop/hadoop
 RUN rm -rf /home/hadoop/hadoop-3.2.0*

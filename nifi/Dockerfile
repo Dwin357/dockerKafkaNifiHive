@@ -28,7 +28,8 @@ RUN cat /home/hadoop/.ssh/id_rsa.pub >> /home/hadoop/.ssh/authorized_keys
 RUN chown hadoop -R /home/hadoop/.ssh
 
 # get nifi sources
-RUN wget http://archive.apache.org/dist/nifi/1.10.0/nifi-1.10.0-bin.tar.gz -P /home/hadoop/
+#RUN wget http://archive.apache.org/dist/nifi/1.10.0/nifi-1.10.0-bin.tar.gz -P /home/hadoop/
+ADD resources/downloads/nifi-1.10.0-bin.tar.gz /home/hadoop/nifi-1.10.0-bin.tar.gz
 RUN tar -xzf /home/hadoop/nifi-1.10.0-bin.tar.gz -C /home/hadoop/
 RUN mv /home/hadoop/nifi-1.10.0 /home/hadoop/nifi
 RUN rm -rf /home/hadoop/nifi-1.10.0*

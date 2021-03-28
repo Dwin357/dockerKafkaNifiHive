@@ -1,2 +1,3 @@
 configs/id_rsa
 configs/id_rsa.pub
+resources/downloads/*
