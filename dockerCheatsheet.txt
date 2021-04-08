@@ -7,12 +7,36 @@ Push/Pull files to container
 	pull
 	$ docker cp mycontainer:/foo.txt foo.txt
 
-Delete all stopped container / unused resources
-	$ docker system prune
+Delete all stopped container / unused resources (-f is for no prompt)
+	$ docker system prune -f
 
 Delete images
 	$ docker rmi <img-1> <img-2>
 
 "SSH" into running container
 	$ docker exec -it <container name> /bin/bash
+
+Start+enter container
+	$ docker run --name <con-nm> --rm -it <image> /bin/bash
+
+
+Build image from Dockerfile
+	$ docker build .
+	$ docker build -f ./path/to/Dockerfile ./path/to/context/ -t imageGroup/imageName:imageTag
+
+
+
+++++++++++  Dockerfile  ++++++++++++++++++++++++
+
+
+CMD <bash command>
+	goes at end of file
+	line that is run when container is started
+
+RUN <bash command>
+	goes anywhere
+	run when image is being built
+	each one results in a new intermediary image being created (for caching)
+
+# a Dockerfile comment
 

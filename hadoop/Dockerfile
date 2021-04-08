@@ -30,8 +30,8 @@ RUN chown hadoop -R /home/hadoop/.ssh
 
 # get sources
 #RUN wget https://archive.apache.org/dist/hadoop/core/hadoop-3.2.0/hadoop-3.2.0.tar.gz -P /home/hadoop/
-ADD resources/downloads/hadoop-3.2.0.tar.gz /home/hadoop/hadoop-3.2.0.tar.gz
-RUN tar -xzf /home/hadoop/hadoop-3.2.0.tar.gz -C /home/hadoop/
+#RUN tar -xzf /home/hadoop/hadoop-3.2.0.tar.gz -C /home/hadoop/
+ADD resources/downloads/hadoop-3.2.0.tar.gz /home/hadoop/
 RUN mv /home/hadoop/hadoop-3.2.0 /home/hadoop/hadoop
 RUN rm -rf /home/hadoop/hadoop-3.2.0*
 

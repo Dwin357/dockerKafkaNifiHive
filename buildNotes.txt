@@ -3,6 +3,23 @@ The original idea for this comes from work, where we are trying to set up a loca
 
 This is the recipie I found: https://github.com/sciencepal/dockers/tree/master/hadoop_hive_spark_docker
 
+
+2021.04.08:1909
+	Got the local resource working (it looks like)
+	- want to make some templates
+
+2021.04.07:1935
+	to get this working, 2 challenges remain
+	- change files from using download/wget to using things in resource files
+	- change from using [ubuntu & postgres] base images with [redhat & bitnami-pg]
+
+	addressing the first, gameplan is to 
+	- build w/ wget -> exec in -> confirm location, permissions, etc
+	- TODAY I LEARNED
+		-- the docker ADD command automagically un-tars zip files (but leaves jars alone)
+
+
+
 ++++++
 
 2021.03.25:1948
